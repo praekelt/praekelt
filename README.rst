@@ -1,10 +1,7 @@
-Praekelt Dev Ways of Working
-============================
+Praekelt Engineering Ways of Working
+====================================
 
-Hey, hopefully you're here because you're about to embark on a
-project with us.
-
-These docs are automatically built & available at http://ways-of-working.rtfd.org/.
+These docs are automatically built & available at http://praekelt-prime-directive.rtfd.org/.
 
 Build these docs locally with::
 
@@ -15,3 +12,4 @@ Build these docs locally with::
     (ve)$ make html
 
 Open `index.html` in `docs/_build/html`.
+

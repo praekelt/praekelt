@@ -2,7 +2,7 @@ Intellectual Property
 =====================
 
 **All** code produced in exchange for remuneration by a Praekelt company must
-have copyright assigned to "Praekelt Foundation" or "Praekelt Consulting"
+have copyright assigned to "Praekelt Consulting"
 as appropriate.
 
 All code published into open Github repositories must be licenced under the
