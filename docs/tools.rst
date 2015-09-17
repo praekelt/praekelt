@@ -4,15 +4,11 @@ Tools we use
 The following are tools we use on a regular basis and which we expect
 you to either use or at least be very familiar with.
 
-IRC
----
+Slack
+-----
 
-IRC is our team's communication tool of choice. Join us in ``#prk-dev`` for general
-developer support, or ``#vumi`` or ``#jmbo`` for development of those platforms,
-on irc://irc.freenode.net/.
-
-Various tools report into these channels and provide insight into what is
-going on.
+You may ask to be invited to a Slack channel for a project. Speak to the relevant
+project manager.
 
 Git
 ---
@@ -57,14 +53,6 @@ when the feature branch lands, so you will need to update this yourself.
 Please read `Useful Github Patterns <http://blog.quickpeople.co.uk/2013/07/10/useful-github-patterns/>`_
 to see ways of working with branches and pull requests that we like.
 
-Hub
----
-
-For projects with issues tracked in Github issues, We use Hub_ to interface
-with GitHub_'s API. It allows one to turn issues on GitHub into
-pull-requests. If that is done then once the pull-request is merged into
-the main branch the issue is automatically closed.
-
 Issues & Tickets
 ----------------
 
@@ -82,6 +70,8 @@ as their ticketing system. We've tried that, it does not work.
 If a Jira project has a workflow, you need to update your tickets
 appropriately:
 New -> Open -> Fixed in dev (when pushed to github) -> Deployed to QA
+
+The workflow may be slightly different depending on the project.
 
 Our QA team will move the ticket to QA Passed, and our DevOps team will be
 responsible for the production deployment before the ticket is resolved.
@@ -115,7 +105,7 @@ Puppet
 We try and automate as much as possible, this includes our hosting environment.
 You will need to give us your SSH key so we can provision a machine for your
 project. Generally you will be given access to a machine that is to be
-used for QA_. Since our DevOps team do the production deployments, and you will
+used for QA_. Since our SRE team do the production deployments, and you will
 get access to production error reports via Sentry_, you won't get access to
 production without a valid need for troubleshooting, and then it will be without
 sudo access.
@@ -132,13 +122,13 @@ changes that are not in puppet then it'll be provisioned without those changes.
 Sideloader
 ----------
 
-Our DevOps team automate deploys using Sideloader, our tool that creates
+Our SRE team automate deploys using Sideloader, our tool that creates
 deb packages from github repos. To enable a repo for this deploy
 automation, create a .deploy.yaml file in your repository, listing
 dependencies and scripts.
 
 We then use puppet to install the debs whenever a new one is published.
-Ask our DevOps team for help with Sideloader, and to set up the puppet
+Ask our SRE team for help with Sideloader, and to set up the puppet
 automation to install the debs.
 
 We can optionally set up a post commit hook to deploy any changes that are
@@ -154,27 +144,33 @@ We use the following services to store our data. Not all projects will use
 all of them but generally a number of these will be involved.
 
 1. PostgreSQL_
-2. Riak_
-3. Memcached_
-4. Redis_
-5. Neo4J_
+2. Memcached_
+3. Redis_
 
 These will be made available to you on a per project basis. Puppet ensures
 that each of these are backed up.
 
-Django Applications
--------------------
+Django / Jmbo Applications
+--------------------------
 
 For Django applications, some applications are mandatory:
 
 1. Sentry_ for application reporting.
-2. South_ for managing database schema changes.
-3. Nose_ for running tests.
-4. Haystack_ for search.
-5. Memcached_ for caching.
+2. South_ for managing database schema changes
+   (when we move to Django 1.8 the built-in migrations can be used).
+3. Memcached_ for caching.
+4. Deviceproxy_ for user agent detection and routing a request to an approriate backend.
 
-We strongly recommend you use our sample django-skeleton_ as a starting point for 
-Django projects, as it has some of these already included.
+We strongly recommend you use our sample jmbo-skeleton_ as a starting point for
+Django projects, as it includes::
+
+1. Django project environment.
+2. Minimal unit tests.
+3. Bash server setup and deploy scripts should you wish to set up a production
+   environment on a VM.
+4. Production ready Nginx config file.
+5. Deviceproxy config file and example handler.
+6. Supervisor config to start Django instances, celery and Deviceproxy.
 
 Translations
 ------------
@@ -188,20 +184,23 @@ ugettext_lazy for models.py and ugettext in other places. We like
 {% trans %} and {% blocktrans %} tags and enforce these for our
 open source products.
 
-Graphite
---------
+RESTful services
+----------------
 
-We use Graphite_ for the majority of our metric publishing for dashboards.
-If appropriate, you will be given details for the Graphite_ server and how
-metrics are to be published to it.
-
+We use http://www.django-rest-framework.org/. Always version your API's
+so you maintain backward compatibility.
 
 Front-end
 ---------
 
-Sass_ CSS pre-processor so that we can take advantage of things that CSS doesn't have yet, or doesn't do properly: variables; nesting (used sparingly); CSS partials / includes; media queries used more like element queries; mixins.
+We use jQuery_ as our only Javascript helper library. Do not blindly include untested jQuery plugins.
+
+Sass_ CSS pre-processor so that we can take advantage of things that CSS doesn't have yet, or doesn't do properly:
+variables; nesting (used sparingly); CSS partials / includes; media queries used more like element queries; mixins.
 
 JavaScript task runners like Grunt_ and Gulp_, with lots of plugins. These handle code linting, image minification, processing Sass into CSS, concatenation and minification of CSS and JS, and running tests.
+
+We use React_ as a front-end framework. Use it for the app-like sections of a system. We do not accept Angular, Backbone or Node.
 
 .. _Praekelt Organization: https://github.com/praekelt/
 .. _Git Flow: https://github.com/nvie/gitflow
@@ -209,18 +208,14 @@ JavaScript task runners like Grunt_ and Gulp_, with lots of plugins. These handl
 .. _Jira: https://praekelt.atlassian.net/
 .. _Sentry: https://github.com/getsentry/sentry/
 .. _PostgreSQL: http://postgresql.org/
-.. _Riak: http://basho.com/riak/
 .. _Memcached: http://memcached.org/
 .. _Redis: http://redis.io
-.. _Neo4J: http://neo4j.org
 .. _QA: http://en.wikipedia.org/wiki/Quality_assurance
-.. _Hub: http://defunkt.io/hub/
-.. _Nose: https://nose.readthedocs.org/
 .. _South: http://south.aeracode.org/
-.. _Haystack: http://haystacksearch.org/
-.. _Graphite: http://graphite.wikidot.com/
 .. _Sideloader help: http://sideloader.praekelt.com/help/
-.. _django-skeleton: https://github.com/praekelt/django-skeleton/#django-skeleton
+.. _jmbo-skeleton: https://github.com/praekelt/jmbo-skeleton/#jmbo-skeleton
+.. _jQuery_: https://jquery.com/
 .. _Sass: http://sass-lang.com/
 .. _Grunt: http://gruntjs.com/
 .. _Gulp: http://gulpjs.com/
+.. _React: https://facebook.github.io/react/
